@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 const cors=require("cors")
 app.use(cors())
+
 const db = require("./db_connection");
 
 app.use(express.static(`${__dirname}/upload`))

@@ -26,12 +26,12 @@ const addTutor = async (req, res) => {
 
     const existingUser = await tutorSchema.findOne({ email });
     if (existingUser) {
-      return res.status(409).json({ msg: "email is aleready exist" });
+      return res.status(409).json({ msg: "email is already exist" });
     }
     const existingUser1 = await tutorSchema.findOne({ idNo });
 
     if (existingUser1) {
-      return res.status(409).json({ msg: "idNo is already exist" });
+      return res.status(408).json({ msg: "idNo is already exist" });
     }
     const result = await tutor.save();
     return res.status(200).json({
@@ -51,11 +51,11 @@ const tutoLogin = async (req, res) => {
     const { email, password } = req.body;
     const tutor = await tutorSchema.findOne({ email: email });
     if (!tutor) {
-      res.status(505).json({
+      res.status(405).json({
         msg: "user not found",
       });
     } else if (tutor.password !== password) {
-      res.status(500).json({
+      res.status(409).json({
         msg: "login again",
       });
     } else {
