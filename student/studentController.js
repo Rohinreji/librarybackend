@@ -16,10 +16,13 @@ const addStudent = async (req, res) => {
     if (!firstname || !lastname || !email || !password || !addNo) {
       return res.json({ status: 400, msg: "All field are required" });
     }
-    studentSchema.find({email})
-    res.json({
-        msg:"Email already exist"
-    })
+    let existingId = await studentSchema.findOne({ email });
+    if (existingId) {
+      res.json({
+        msg: "Email already exist",
+        status: 409,
+      });
+    }
     const student = new studentSchema({
       firstname,
       lastname,
@@ -43,4 +46,4 @@ const addStudent = async (req, res) => {
     });
   }
 };
-module.exports = { addStudent,upload};
+module.exports = { addStudent, upload };
