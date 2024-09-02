@@ -16,6 +16,10 @@ const addStudent = async (req, res) => {
     if (!firstname || !lastname || !email || !password || !addNo) {
       return res.json({ status: 400, msg: "All field are required" });
     }
+    studentSchema.find({email})
+    res.json({
+        msg:"Email already exist"
+    })
     const student = new studentSchema({
       firstname,
       lastname,
