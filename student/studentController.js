@@ -46,4 +46,33 @@ const addStudent = async (req, res) => {
     });
   }
 };
-module.exports = { addStudent, upload };
+
+//studentLogin
+const studentLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      res.json({
+        status: 400,
+        msg: "All fields are required",
+      });
+    }
+    const student = await studentSchema.findOne({ email, password });
+    if (!student)
+      return res.json({
+        status: 401,
+        msg: "User not found",
+      });
+    res.json({
+      status: 200,
+      msg: "Login success",
+      data: student,
+    });
+  } catch (error) {
+    res.json({
+      status: 404,
+      msg: "Fail",
+    });
+  }
+};
+module.exports = { addStudent, upload ,studentLogin};
