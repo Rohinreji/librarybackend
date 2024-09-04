@@ -57,11 +57,16 @@ const studentLogin = async (req, res) => {
         msg: "All fields are required",
       });
     }
-    const student = await studentSchema.findOne({ email, password });
+    const student = await studentSchema.findOne({ email });
     if (!student)
       return res.json({
         status: 401,
         msg: "User not found",
+      });
+    if (student.password !== password)
+      return res.json({
+        status: 401,
+        msg: "password mismatch",
       });
     res.json({
       status: 200,
@@ -75,4 +80,29 @@ const studentLogin = async (req, res) => {
     });
   }
 };
-module.exports = { addStudent, upload ,studentLogin};
+
+//studentForgotPassword
+
+const studentForgotPassword = async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+    const student = await studentSchema.findOne({ email });
+    if (!student)
+      return res.json({
+        status: 401,
+        msg: "User Not found",
+      });
+    student.password = newPassword;
+    await student.save();
+    res.json({
+      status: 200,
+      msg: "Password chamged",
+    });
+  } catch (error) {
+    res.json({
+      status: 400,
+      msg: "fail",
+    });
+  }
+};
+module.exports = { addStudent, upload, studentLogin, studentForgotPassword };
