@@ -12,4 +12,4 @@ const rendedBooksSchema = new mongoose.Schema({
 
     
 
-module.exports = new mongoose.model("rented",rendedBooksSchema)
+module.exports = new mongoose.model("renteds",rendedBooksSchema)

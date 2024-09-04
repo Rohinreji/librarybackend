@@ -1,7 +1,7 @@
 const rendedBooksSchema = require("./rendedBooksSchema");
 const addRentBook = async (req, res) => {
   try {
-    books = new rendedBooksSchema({
+    let books = new rendedBooksSchema({
       tutorId: req.body.tutorId,
       booksId: req.body.booksId,
     });
@@ -11,4 +11,21 @@ const addRentBook = async (req, res) => {
     res.status(400).json({ err: error, msg: "error" });
   }
 };
-module.exports = { addRentBook };
+
+const tutorViewRental = async (req,res) =>
+{
+try {
+  const result = await rendedBooksSchema.findOne({tutorId:req.body.tutorId})
+  .populate("booksId")
+ res.status(200).json({
+    data:result,
+    msg:"data retrieved"
+  })
+} catch (error) {
+   res.json({
+    status:400,
+    err:error})
+}  
+}
+
+module.exports = { addRentBook, tutorViewRental };

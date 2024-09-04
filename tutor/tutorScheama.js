@@ -21,9 +21,17 @@ const tutorSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    profile:{
+    profile:{  
         type:Object
+    },
+    isAcive:{
+        type:Boolean
+    },
+    adminApproved:{
+        type:String,
+        enum:["pending","approved","rejected"],
+        default:"pending"
     }
 })
 
-module.exports = new mongoose.model("tutor",tutorSchema)
+module.exports = new mongoose.model("tutors",tutorSchema)
