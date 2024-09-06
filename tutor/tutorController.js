@@ -26,7 +26,7 @@ const addTutor = async (req, res) => {
 
     const existingUser = await tutorSchema.findOne({ email });
     if (existingUser) {
-      return res.status(409).json({ msg: "email is already exist" });
+      return res.status(409).json({ msg: "email ias already exist" });
     }
     const existingUser1 = await tutorSchema.findOne({ idNo });
 
@@ -56,9 +56,16 @@ const tutoLogin = async (req, res) => {
       });
     } else if (tutor.password !== password) {
       res.status(409).json({
-        msg: "login again",
+        msg: "password mismatch",
       });
-    } else {
+    } 
+    else if(tutor.adminApproved=="rejected" || tutor.adminApproved =="pending")
+    {
+      res.status(500).json({
+        msg:"admin is not approved"
+      })
+    }
+    else {
       res.status(200).json({
         data: tutor,
         msg: "login sucessfully",
@@ -88,21 +95,31 @@ const viewProfile = async (req, res) => {
 
 const TutorForgetPassword = async (req, res) => {
   try {
-    const email = await tutorSchema.findOne({ email: req.body.email });
-    if (!email) {
-      res.status(500).json({
-        msg: "email is not found",
-      });
-    } else {
+    // const email = await tutorSchema.findOne({ email: req.body.email });
+    // if (!email) {
+    //   res.status(500).json({
+    //     msg: "email is not found",
+    //   });
+    // } else {
       const tutor = await tutorSchema.findOneAndUpdate(
         { email: req.body.email },
         { password: req.body.password }
       );
-      res.status(200).json({
-        data: tutor,
-        msg: "password changed",
-      });
-    }
+      if(tutor!== null)
+      {
+
+        res.status(200).json({
+          data: tutor,
+          msg: "password changed",
+        });
+      }
+      else
+      {
+        res.status(500).josn({
+          msg:"email is not found"
+        })
+      }
+    // }
   } catch (error) {
     res.status(400).json({
       err: error,
@@ -111,4 +128,138 @@ const TutorForgetPassword = async (req, res) => {
   }
 };
 
-module.exports = { addTutor, upload, tutoLogin, viewProfile,TutorForgetPassword };
+const viewAllTutors = async (req, res) => {
+  try {
+    const response = await tutorSchema.find({});
+    res.status(200).json({
+      data: response,
+      msg: "data obtained",
+    });
+  } catch (error) {
+    res.status(400).json({
+      err: error,
+      msg: "error",
+    });
+  }
+};
+
+const ApproveTutorsById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const tutor = await tutorSchema.findOne({_id:req.params.id});
+
+    if (!tutor) {
+      res.status(500).json({
+        msg: "no user is found",
+      });
+    }
+
+    const Updatetutor = await tutorSchema.findByIdAndUpdate(
+      {_id:req.params.id} ,
+      { adminApproved: "approved" }
+    );
+
+    res.status(200).json({
+      data: Updatetutor,
+      msg: "tutor approved successfully",
+    });
+  } catch (error) {
+    res.status(400).json({
+      err: error,
+      msg: "error",
+    });
+  }
+};
+
+const viewAllPendingTutors = async (req,res) =>
+{
+try {
+  const allTutor = await tutorSchema.find({adminApproved:"pending"})
+res.status(200).json({ 
+  data:allTutor,
+  msg:"all pending data obtained"
+})
+} catch (error) {
+  res.status(400).json({
+    
+  err:error,
+  msg:"error"
+  })
+}
+}
+const viewAllApprovedTutors = async (req,res) =>
+{
+try {
+  const allTutor = await tutorSchema.find({adminApproved:"approved"})
+res.status(200).json({ 
+  data:allTutor,
+  msg:"all pending data obtained"
+})
+} catch (error) {
+  res.status(400).json({
+    
+  err:error,
+  msg:"error"
+  })
+}
+}
+const viewAllRejectedTutors = async (req,res) =>
+{
+try {
+  const allTutor = await tutorSchema.find({adminApproved:"approved"})
+res.status(200).json({ 
+  data:allTutor,
+  msg:"all pending data obtained"
+})
+} catch (error) {
+  res.status(400).json({
+    
+  err:error,
+  msg:"error"
+  })
+}
+}
+
+
+const rejectTutorsById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const tutor = await tutorSchema.findOne({ _id:req.params.id });
+
+    if (!tutor) {
+      res.status(500).json({
+        msg: "no user is found",
+      });
+    }
+
+    const Updatetutor = await tutorSchema.findByIdAndUpdate(
+      { _id:req.params.id },
+      { adminApproved: "rejected" }
+    );
+    res.status(200).json({
+      data:Updatetutor,
+      msg: "tutor rejected successfully",
+    });
+  } catch (error) {
+    res.status(400).json({
+      err: error,
+      msg: "error",
+    });
+  }
+};
+
+module.exports = {
+  addTutor,
+  upload,
+  tutoLogin,
+  viewProfile,
+  TutorForgetPassword,
+  viewAllTutors,
+  ApproveTutorsById,
+  rejectTutorsById,
+  viewAllApprovedTutors,
+  viewAllPendingTutors,
+  viewAllRejectedTutors
+};
