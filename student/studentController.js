@@ -9,69 +9,58 @@ const storage = multer.diskStorage({
     cb(null, file.originalname);
   },
 });
+
 const upload = multer({ storage: storage }).single("photo");
 const addStudent = async (req, res) => {
-  try { 
+  try {
+    const { firstname, lastname, email, addNo, password, photo } = req.body;
     const student = new studentSchema({
       firstname,
       lastname,
       email,
-      password,
       addNo,
+      password,
       photo: req.file,
     });
-    const { firstname, lastname, email, password, addNo } = req.body;
-   
-    let existingId = await studentSchema.findOne({ email });
-    console.log(existingId);
-    console.log(existingId,"fdf");
-    if (existingId) {
-      res.json({
-        msg: "Email already exist",
-        status: 409,
-      });
+    const existingUser = await studentSchema.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ msg: "Email is already exist" });
     }
-    await student.save();
-    res.json({
+    const result = await student.save();
+    return res.json({
       status: 200,
-      data: student,
-      msg: "Student registeration successfull",
+      msg: "Registration successfull",
+      data: result,
     });
   } catch (error) {
     res.json({
-      status: 500,
-      error: error,
-      msg: error,
+      err: error,
+      msg: "error",
+      status: 405,
     });
   }
 };
-
 //studentLogin
 const studentLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) {
-      res.json({
-        status: 400,
-        msg: "All fields are required",
-      });
-    }
-    const student = await studentSchema.findOne({ email });
-    if (!student)
-      return res.json({
-        status: 401,
+    const student = await studentSchema.findOne({ email: email });
+    if (!student) {
+      res.status(405).json({
         msg: "User not found",
       });
-    if (student.password !== password)
-      return res.json({
-        status: 401,
+    } else if (student.password !== password) {
+      res.status(401).json({
         msg: "password mismatch",
       });
-    res.json({
-      status: 200,
-      msg: "Login success",
-      data: student,
-    });
+    } else if (student.isActive === false) {
+      res.status(402).json({ msg: "Admin not approved" });
+    } else {
+      res.status(200).json({
+        msg: "Login success",
+        data: student,
+      });
+    }
   } catch (error) {
     res.json({
       status: 404,
@@ -87,15 +76,13 @@ const studentForgotPassword = async (req, res) => {
     const { email, newPassword } = req.body;
     const student = await studentSchema.findOne({ email });
     if (!student)
-      return res.json({
-        status: 401,
+      return res.status(401).json({
         msg: "User Not found",
       });
     student.password = newPassword;
     await student.save();
-    res.json({
-      status: 200,
-      msg: "Password chamged",
+    res.status(200).json({
+      msg: "Password changed",
     });
   } catch (error) {
     res.json({
@@ -104,4 +91,80 @@ const studentForgotPassword = async (req, res) => {
     });
   }
 };
-module.exports = { addStudent, upload, studentLogin, studentForgotPassword };
+
+const deleteStudent = async (req, res) => {
+  try {
+    const result = await studentSchema.findByIdAndUpdate(
+      { _id: req.params.id },
+      { isActive: false }
+    );
+    return res.status(200).json({
+      msg: "User deactivated",
+      data: result,
+    });
+  } catch (error) {
+    return res.status(404).json({
+      msg: "error",
+      error: error,
+    });
+  }
+};
+//active student
+
+const acceptStudent = async (req, res) => {
+  try {
+    const result = await studentSchema.findByIdAndUpdate(
+      { _id: req.params.id },
+      { isActive: true }
+    );
+    return res.status(200).json({
+      msg: "Account activated",
+      data: result,
+    });
+  } catch (error) {
+    return res.status(404).json({
+      msg: "error",
+      error: error,
+    });
+  }
+};
+
+//view all students
+const viewAllStudents = async (req, res) => {
+  try {
+    const students = await studentSchema.find({});
+    return res.status(200).json({
+      msg: "All user retrieved",
+      data: students,
+    });
+  } catch (error) {
+    return res.status(404).json({
+      msg: "Error",
+      error: error,
+    });
+  }
+};
+
+//viewStudentById
+
+const viewStudentById = async (req, res) => {
+  try {
+    const student = await studentSchema.findById({ _id: req.params.id });
+    return res.status(200).json({
+      msg: "Account retrieved",
+      data: student,
+    });
+  } catch (error) {
+    return res.status(404).json({ msg: "error", error: error });
+  }
+};
+module.exports = {
+  addStudent,
+  upload,
+  studentLogin,
+  studentForgotPassword,
+  deleteStudent,
+  acceptStudent,
+  viewAllStudents,
+  viewStudentById,
+};
