@@ -87,4 +87,17 @@ const tutorViewSingleProduct = async (req, res) => {
   }
 };
 
-module.exports = { addBooks, upload, viewAllBook, tutorViewSingleProduct };
+const updateQuantity = async () =>
+{
+try {
+  const result = await booksSchema.findOne({_id:req.params.id})
+  console.log(result);
+
+} catch (error) {
+  res.status(400).json({
+    err:error,
+    msg:"error"
+  })
+}}
+
+module.exports = { addBooks, upload, viewAllBook, tutorViewSingleProduct ,updateQuantity};
