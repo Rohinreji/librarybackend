@@ -50,7 +50,7 @@ router.post("/adminRejectReturnReq",rentBookByTutor.rejectReturnReq)
 router.post("/add-books", books.upload, books.addBooks);
 router.get("/viewAllBooks", books.viewAllBook);
 router.get("/view-single-product/:id", books.tutorViewSingleProduct);
-router.post("/updateBookQuantity",books.updateQuantity)
+router.post("/updateBookQuantity/:id",books.updateQuantity)
 
 // rent
 router.post("/rendBookByTutor" ,rentBookByTutor.addRentBook) 

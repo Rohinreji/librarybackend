@@ -87,10 +87,11 @@ const tutorViewSingleProduct = async (req, res) => {
   }
 };
 
-const updateQuantity = async () =>
+const updateQuantity = async (req,res) =>
 {
 try {
   const result = await booksSchema.findOne({_id:req.params.id})
+  let newQuantity = result.availableCopies - req.body.quantity
   console.log(result);
 
 } catch (error) {
