@@ -13,16 +13,6 @@ const upload = multer({ storage: storage }).single("photo");
 const addStudent = async (req, res) => {
   try {
     const { firstname, lastname, email, password, addNo } = req.body;
-    if (!firstname || !lastname || !email || !password || !addNo) {
-      return res.json({ status: 400, msg: "All field are required" });
-    }
-    let existingId = await studentSchema.findOne({ email });
-    if (existingId) {
-      res.json({
-        msg: "Email already exist",
-        status: 409,
-      });
-    }
     const student = new studentSchema({
       firstname,
       lastname,
@@ -31,11 +21,18 @@ const addStudent = async (req, res) => {
       addNo,
       photo: req.file,
     });
+    if (!firstname || !lastname || !email || !password || !addNo) {
+      return res.json({ status: 400, msg: "All field are required" });
+    }
+    const existingId = await studentSchema.findOne({ email });
+    if (existingId) {
+      res.json({ status: 409, msg: "Email already exist" });
+    }
     await student.save();
     res.json({
       status: 200,
       data: student,
-      msg: "Student registeration successfully",
+      msg: "Student registeration successfull",
     });
   } catch (error) {
     console.log(error);
