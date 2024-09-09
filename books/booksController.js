@@ -87,17 +87,40 @@ const tutorViewSingleProduct = async (req, res) => {
   }
 };
 
-const updateQuantity = async () =>
-{
-try {
-  const result = await booksSchema.findOne({_id:req.params.id})
-  console.log(result);
+const updateQuantity = async (req, res) => {
+  try {
+    const result = await booksSchema.findOne({ _id: req.params.id });
 
-} catch (error) {
-  res.status(400).json({
-    err:error,
-    msg:"error"
-  })
-}}
+    if (result.availableCopies < req.body.quantity) {
+      res.status(408).json({
+        msg: "not available",
+      });
+    } else {
+      let newQuantity = (await result.availableCopies) - req.body.quantity;
+      const data = await booksSchema.findByIdAndUpdate(
+        { _id: req.params.id },
+        { availableCopies: newQuantity }
+      );
+      console.log(data);
+      res.status(200).json({
+        data: data,
+        msg: "quantity updated",
+      });
+    }
+  } catch (error) {
+    res.status(400).json({
+      err: error,
+      msg: "error",
+    });
+  }
+};
 
-module.exports = { addBooks, upload, viewAllBook, tutorViewSingleProduct ,updateQuantity};
+
+
+module.exports = {
+  addBooks,
+  upload,
+  viewAllBook,
+  tutorViewSingleProduct,
+  updateQuantity,
+};

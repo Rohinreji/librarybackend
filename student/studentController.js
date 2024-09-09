@@ -1,3 +1,4 @@
+const tutorScheama = require("../tutor/tutorScheama");
 const studentSchema = require("./studentSchema");
 const multer = require("multer");
 
@@ -91,6 +92,8 @@ const studentForgotPassword = async (req, res) => {
     });
   }
 };
+
+
 
 const deleteStudent = async (req, res) => {
   try {

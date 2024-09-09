@@ -249,6 +249,29 @@ const rejectTutorsById = async (req, res) => {
     });
   }
 };
+const updateTutorProfile =async (req,res) =>
+  {
+  try {
+    const result = await tutorSchema.findByIdAndUpdate({_id:req.params.id},
+      {
+        firstName:req.body.firstName,
+        email:req.body.email,
+        idNo:req.body.idNo,
+        profile: req.file
+      }
+      )
+      res.status(200).json({
+        data:result,
+        msg:"profile updated successfully"
+      })
+  } catch (error) {
+    res.status(400).json({
+      err:error,
+      msg:"error"
+    })
+  }
+  
+  }
 
 module.exports = {
   addTutor,
@@ -261,5 +284,6 @@ module.exports = {
   rejectTutorsById,
   viewAllApprovedTutors,
   viewAllPendingTutors,
-  viewAllRejectedTutors
+  viewAllRejectedTutors,
+  updateTutorProfile
 };
