@@ -29,7 +29,7 @@ router.post("/tutorRemoveFromCart/:id",tutorAddToCart.removeFromCart)
 
 
 
-// admin && tutor
+// admin && tutors
 
 router.put("/approveTutor/:id",tutor.ApproveTutorsById)
 router.put("/rejectTutor/:id",tutor.rejectTutorsById)

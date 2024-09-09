@@ -93,11 +93,8 @@ const studentForgotPassword = async (req, res) => {
   }
 };
 
-<<<<<<< HEAD
 
 
-module.exports = { addStudent, upload, studentLogin, studentForgotPassword };
-=======
 const deleteStudent = async (req, res) => {
   try {
     const result = await studentSchema.findByIdAndUpdate(
@@ -174,4 +171,3 @@ module.exports = {
   viewAllStudents,
   viewStudentById,
 };
->>>>>>> f62046fefc3d65fa9c2ebdabb724657f1b6a796b
