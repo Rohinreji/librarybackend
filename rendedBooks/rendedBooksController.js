@@ -4,8 +4,10 @@ const addRentBook = async (req, res) => {
     let books = new rendedBooksSchema({
       tutorId: req.body.tutorId,
       booksId: req.body.booksId,
+      addedQuantity:req.body.addedQuantity,
     });
     const result = await books.save();
+    console.log(result);
     res.status(200).json({ data: result, msg: "rent request sended" });
   } catch (error) {
     res.status(400).json({ err: error, msg: "error" });
@@ -121,6 +123,24 @@ const adminViewPendingRental = async (req, res) => {
   }
 };
 
+const adminApprovedBooks = async (req,res) =>
+{
+try {
+  
+const result = await rendedBooksSchema.find({adminApprove:"approved"}).populate("booksId").populate("tutorId")
+res.status(200).json({
+  data:result,
+  msg:"data retrieved"
+})
+
+} catch (error) {
+ res.status(400).json({
+  err:error,
+  msg:"error"
+ }) 
+}
+}
+
 
 const tutorViewRentalInReturn = async (req, res) => {
   try {
@@ -175,7 +195,7 @@ res.status(200).json({
 const approveReturnReq = async  (req,res) =>
 {
  try {
-  const result = await rendedBooksSchema.findByIdAndUpdate({_id:req.body.id},{returnBook:"approve"}) 
+  const result = await rendedBooksSchema.findByIdAndUpdate({_id:req.body.id},{returnBook:"approve",adminApprove:"pending"}) 
   res.status(200).json({
     data:null,
     msg:"return request approved"
@@ -215,5 +235,6 @@ module.exports = {
   tutorReturnReq,
   adminViewReturnReq,
   approveReturnReq,
-  rejectReturnReq
+  rejectReturnReq,
+  adminApprovedBooks
 };

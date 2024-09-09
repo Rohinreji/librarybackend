@@ -1,3 +1,4 @@
+const tutorScheama = require("../tutor/tutorScheama");
 const studentSchema = require("./studentSchema");
 const multer = require("multer");
 
@@ -104,4 +105,7 @@ const studentForgotPassword = async (req, res) => {
     });
   }
 };
+
+
+
 module.exports = { addStudent, upload, studentLogin, studentForgotPassword };

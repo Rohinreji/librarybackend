@@ -6,6 +6,7 @@ const books = require("./books/booksController");
 const rent = require("./rendedBooks/rendedBooksController");
 const rentBookByTutor = require("./rendedBooks/rendedBooksController")
 const tutorAddToCart = require("./TutorAddToCart/tutorAddToCartController");
+const rendedBooksSchema = require("./rendedBooks/rendedBooksSchema");
 
 router.post("/student-signUp", student.upload, student.addStudent);
 router.post("/studentLogin", student.studentLogin);
@@ -17,6 +18,7 @@ router.post("/tutorSignup", tutor.upload, tutor.addTutor);
 router.post("/tutorLogin", tutor.tutoLogin);
 router.get("/tutorViewProfile/:id", tutor.viewProfile);
 router.post("/tutor-forgot-password", tutor.TutorForgetPassword);
+router.post("/updateTutorProfile/:id",tutor.updateTutorProfile)
 router.get("/view-all/tutor",tutor.viewAllTutors) 
 router.post("/tutorAddToCart",tutorAddToCart.tutorCart)
 router.post("/tutorViewAddToCart",tutorAddToCart.viewTutorCart)
@@ -38,6 +40,7 @@ router.get("/adminViewRental",rentBookByTutor.adminViewRental)
 router.post("/adminApproveRental/:id",rentBookByTutor.adminApproveRental)
 router.post("/adminRejectRental/:id",rentBookByTutor.adminRejectRental)
 router.get("/adminViewPendingRental",rentBookByTutor.adminViewPendingRental)
+router.get("/adminApprovedBooks",rentBookByTutor.adminApprovedBooks)/*not used*/
 router.post("/tutorReturnReq/:id",rentBookByTutor.tutorReturnReq)
 router.get("/adminViewReturnReq",rentBookByTutor.adminViewReturnReq)
 router.post("/adminApproveReturnReq",rentBookByTutor.approveReturnReq)
