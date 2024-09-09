@@ -11,7 +11,7 @@ const studentSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique:true
+    unique: true,
   },
   addNo: {
     type: Number,
@@ -22,10 +22,13 @@ const studentSchema = new mongoose.Schema({
     required: true,
   },
   photo: {
-    type:Object,
-    required:true
+    type: Object,
+    required: true,
+  },
+  isActive: {
+    type: Boolean,
+    default: false,
   },
 });
 
-module.exports= new mongoose.model("student",studentSchema)
-
+module.exports = new mongoose.model("student", studentSchema);
