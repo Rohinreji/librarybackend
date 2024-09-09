@@ -8,10 +8,13 @@ const rentBookByTutor = require("./rendedBooks/rendedBooksController")
 const tutorAddToCart = require("./TutorAddToCart/tutorAddToCartController");
 const rendedBooksSchema = require("./rendedBooks/rendedBooksSchema");
 
-router.post("/student-signUp", student.upload, student.addStudent);
+router.post("/studentSignup",student.upload, student.addStudent);
 router.post("/studentLogin", student.studentLogin);
 router.post("/studentForgotPassword", student.studentForgotPassword);
-
+router.post("/deleteStudent/:id",student.deleteStudent)
+router.post("/acceptStudent/:id",student.acceptStudent)
+router.get("/viewAllStudents",student.viewAllStudents)
+router.get("/viewStudentById/:id",student.viewStudentById)
 // tutor
 
 router.post("/tutorSignup", tutor.upload, tutor.addTutor);
