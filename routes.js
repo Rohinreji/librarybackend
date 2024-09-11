@@ -7,6 +7,7 @@ const rent = require("./rendedBooks/rendedBooksController");
 const rentBookByTutor = require("./rendedBooks/rendedBooksController")
 const tutorAddToCart = require("./TutorAddToCart/tutorAddToCartController");
 const rendedBooksSchema = require("./rendedBooks/rendedBooksSchema");
+const rentBookByStudent=require("./studentRentBook/studentRentBookController")
 
 router.post("/studentSignup",student.upload, student.addStudent);
 router.post("/studentLogin", student.studentLogin);
@@ -15,6 +16,10 @@ router.post("/deleteStudent/:id",student.deleteStudent)
 router.post("/acceptStudent/:id",student.acceptStudent)
 router.get("/viewAllStudents",student.viewAllStudents)
 router.get("/viewStudentById/:id",student.viewStudentById)
+router.post("/viewAllApprovedStudents",student.viewAllApprovedStudents)
+router.post("/viewAllRejectedStudents",student.viewAllRejectedStudents)
+
+
 // tutor
 
 router.post("/tutorSignup", tutor.upload, tutor.addTutor);
@@ -27,7 +32,13 @@ router.post("/tutorAddToCart",tutorAddToCart.tutorCart)
 router.post("/tutorViewAddToCart",tutorAddToCart.viewTutorCart)
 router.post("/tutorRemoveFromCart/:id",tutorAddToCart.removeFromCart)
 
-
+//student && rent
+router.post("/studentAddRentBook",rentBookByStudent.addStdRentBook)
+router.post("/approveStdRental/:id",rentBookByStudent.approveStdRentalBooks)
+router.post("/studentViewApprovedRentals",rentBookByStudent.studentViewApprovedRentals)
+router.get("/viewAllPendingStdRentals",rentBookByStudent.viewPendingRentals)
+router.post("/rejectStdRental/:id",rentBookByStudent.rejectStdBookRental)
+router.get("/viewRejectedStdRentals",rentBookByStudent.viewAllRejectedStdRentals)
 
 // admin && tutors
 

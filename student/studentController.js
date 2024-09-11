@@ -1,4 +1,3 @@
-const tutorScheama = require("../tutor/tutorScheama");
 const studentSchema = require("./studentSchema");
 const multer = require("multer");
 
@@ -93,8 +92,6 @@ const studentForgotPassword = async (req, res) => {
   }
 };
 
-
-
 const deleteStudent = async (req, res) => {
   try {
     const result = await studentSchema.findByIdAndUpdate(
@@ -161,6 +158,40 @@ const viewStudentById = async (req, res) => {
     return res.status(404).json({ msg: "error", error: error });
   }
 };
+
+//viewAllAprrovedStudents
+
+const viewAllApprovedStudents = async (req, res) => {
+  try {
+    const students = await studentSchema.find({ isActive: true });
+    res.status(200).json({
+      msg: "Account retrieved",
+      data: students,
+    });
+  } catch (error) {
+    res.status(404).json({
+      msg: "error",
+      error: error,
+    });
+  }
+};
+
+//viewAllRejectedStudents
+
+const viewAllRejectedStudents = async (req, res) => {
+  try {
+    const students = await studentSchema.find({ isActive: false });
+    res.status(200).json({
+      msg: "Account retrieved",
+      data: students,
+    });
+  } catch (error) {
+    res.status(404).json({
+      msg: "error",
+      error: error,
+    });
+  }
+};
 module.exports = {
   addStudent,
   upload,
@@ -170,4 +201,6 @@ module.exports = {
   acceptStudent,
   viewAllStudents,
   viewStudentById,
+  viewAllApprovedStudents,
+  viewAllRejectedStudents
 };
