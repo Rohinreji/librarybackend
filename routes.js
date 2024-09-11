@@ -31,6 +31,8 @@ router.get("/view-all/tutor",tutor.viewAllTutors)
 router.post("/tutorAddToCart",tutorAddToCart.tutorCart)
 router.post("/tutorViewAddToCart",tutorAddToCart.viewTutorCart)
 router.post("/tutorRemoveFromCart/:id",tutorAddToCart.removeFromCart)
+router.get("/rentCartProductsByTutor/:id",tutorAddToCart.rentCartProducts)
+
 
 //student && rent
 router.post("/studentAddRentBook",rentBookByStudent.addStdRentBook)
@@ -67,7 +69,9 @@ router.post("/adminRejectReturnReq",rentBookByTutor.rejectReturnReq)
 router.post("/add-books", books.upload, books.addBooks);
 router.get("/viewAllBooks", books.viewAllBook);
 router.get("/view-single-product/:id", books.tutorViewSingleProduct);
-router.post("/updateBookQuantity/:id",books.updateQuantity)
+router.post("/removeBookQuantity/:id",books.removeQuantity)
+router.post("/addBookQuantity/:id",books.addBookQuantity)
+router.get("/filterBookByCategory/:cat",books.filterByCategory)
 
 // rent
 router.post("/rendBookByTutor" ,rentBookByTutor.addRentBook) 
