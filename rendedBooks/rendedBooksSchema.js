@@ -10,7 +10,6 @@ const rendedBooksSchema = new mongoose.Schema({
   },
   addedQuantity: {
     type: Number,
-    required: true,
   },
   adminApprove: {
     type: String,
@@ -22,6 +21,6 @@ const rendedBooksSchema = new mongoose.Schema({
     enum: ["pending", "approved", "onRent", "rejected"],
     default: "onRent",
   },
-});
+},{timestamps:true});
 
 module.exports = new mongoose.model("renteds", rendedBooksSchema);
