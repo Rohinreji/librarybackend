@@ -8,6 +8,9 @@ const tutorAddToCartSchema = new mongoose.Schema({
     booksId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"books",
+    },
+    addedQuantity :{
+        type:Number
     }
 })
 module.exports = new mongoose.model("tutorCarts",tutorAddToCartSchema)
