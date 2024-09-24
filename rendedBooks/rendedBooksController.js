@@ -20,7 +20,7 @@ const tutorViewRental = async (req, res) => {
     console.log(approve, "approved");
     if (approve) {
       const result = await rendedBooksSchema
-        .find({ tutorId: req.body.tutorId,adminApprove: "approved" })
+        
         .populate("booksId");
       console.log(result);
 
@@ -61,10 +61,15 @@ const adminViewRental = async (req, res) => {
 
 const adminApproveRental = async (req, res) => {
   try {
+    var date = new Date();
+    console.log(date, "date");
     const result = await rendedBooksSchema.findByIdAndUpdate(
       { _id: req.params.id },
-      { adminApprove: "approved" }
+      { adminApprove: "approved", approvedDate:date },
+   
     );
+    console.log(result);
+
     if (!result) {
       res.status(500).json({
         msg: "No request was sended",
@@ -131,6 +136,7 @@ const adminApprovedBooks = async (req, res) => {
       .find({ adminApprove: "approved" })
       .populate("booksId")
       .populate("tutorId");
+
     res.status(200).json({
       data: result,
       msg: "data retrieved",
@@ -204,6 +210,7 @@ const approveReturnReq = async (req, res) => {
       { _id: req.body.id },
       { returnBook: "approve", adminApprove: "pending" }
     );
+
     res.status(200).json({
       data: null,
       msg: "return request approved",
