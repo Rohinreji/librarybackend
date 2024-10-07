@@ -69,26 +69,31 @@ const rejectStdBookRental = async (req, res) => {
 
 const studentViewApprovedRentals = async (req, res) => {
   try {
-    const student = await studentRentBookSchema.find({
-      studentId: req.body.studentId,
+    const approve = await studentRentBookSchema.find({
+      adminApprove: "approved",
     });
-    if (student) {
-      const approvedRental = await studentRentBookSchema.find({
+    console.log(approve);
+
+    if (approve) {
+      const approveStdRental = await studentRentBookSchema.find({
+        studentId: req.body.studentId,
         adminApprove: "approved",
       });
+      console.log(approveStdRental);
+
       res.status(200).json({
-        msg: "data retrieved",
-        data: approvedRental,
+        msg: "Data retrieved",
+        data: approveStdRental,
       });
     } else {
       res.status(408).json({
-        msg: "no data found",
+        msg: "No data found",
       });
     }
   } catch (error) {
-    res.status(404).json({
-      error: error,
+    res.status(400).json({
       msg: "error",
+      err: error,
     });
   }
 };
@@ -99,7 +104,7 @@ const viewPendingRentals = async (req, res) => {
   try {
     const pendingRentals = await studentRentBookSchema
       .find({ adminApprove: "pending" })
-      // .populate("studentId")
+      .populate("studentId")
       .populate("booksId");
 
     res.status(200).json({
@@ -121,7 +126,7 @@ const viewAllRejectedStdRentals = async (req, res) => {
       .find({
         adminApprove: "rejected",
       })
-      .populate("booksId") 
+      .populate("booksId");
     return res.status(200).json({
       msg: "data retrieved",
       data: rejectedRentals,
@@ -140,5 +145,5 @@ module.exports = {
   rejectStdBookRental,
   studentViewApprovedRentals,
   viewPendingRentals,
-  viewAllRejectedStdRentals
+  viewAllRejectedStdRentals,
 };

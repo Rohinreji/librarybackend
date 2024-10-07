@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const stdRentBookSchema = new mongoose.Schema({
   studentId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "students",
+    ref: "student",
   },
   booksId: {
     type: mongoose.Schema.Types.ObjectId,
