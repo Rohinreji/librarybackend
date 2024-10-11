@@ -26,8 +26,9 @@ const studentSchema = new mongoose.Schema({
     required: true,
   },
   isActive: {
-    type: Boolean,
-    default: false,
+    type: String,
+    enum: ["approved", "pending", "rejected"],
+    default: "pending",
   },
 });
 

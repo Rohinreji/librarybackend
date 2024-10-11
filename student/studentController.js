@@ -1,4 +1,3 @@
-const tutorScheama = require("../tutor/tutorScheama");
 const studentSchema = require("./studentSchema");
 const multer = require("multer");
 
@@ -54,7 +53,7 @@ const studentLogin = async (req, res) => {
       res.status(401).json({
         msg: "password mismatch",
       });
-    } else if (student.isActive === false) {
+    } else if (student.isActive === "pending") {
       res.status(402).json({ msg: "Admin not approved" });
     } else {
       res.status(200).json({
@@ -93,13 +92,11 @@ const studentForgotPassword = async (req, res) => {
   }
 };
 
-
-
 const deleteStudent = async (req, res) => {
   try {
     const result = await studentSchema.findByIdAndUpdate(
       { _id: req.params.id },
-      { isActive: false }
+      { isActive: "rejected" }
     );
     return res.status(200).json({
       msg: "User deactivated",
@@ -118,7 +115,7 @@ const acceptStudent = async (req, res) => {
   try {
     const result = await studentSchema.findByIdAndUpdate(
       { _id: req.params.id },
-      { isActive: true }
+      { isActive: "approved" }
     );
     return res.status(200).json({
       msg: "Account activated",
@@ -161,6 +158,83 @@ const viewStudentById = async (req, res) => {
     return res.status(404).json({ msg: "error", error: error });
   }
 };
+
+//viewAllAprrovedStudents
+
+const viewAllApprovedStudents = async (req, res) => {
+  try {
+    const students = await studentSchema.find({ isActive: "approved" });
+    res.status(200).json({
+      msg: "Account retrieved",
+      data: students,
+    });
+  } catch (error) {
+    res.status(404).json({
+      msg: "error",
+      error: error,
+    });
+  }
+};
+
+//viewAllPendingReq
+
+const viewAllPendingStudents = async (req, res) => {
+  try {
+    const students = await studentSchema.find({ isActive: "pending" });
+    res.status(200).json({
+      msg: "Account retrieved",
+      data: students,
+    });
+  } catch (error) {
+    res.status(404).json({
+      msg: "error",
+      error: error,
+    });
+  }
+};
+
+//viewAllRejectedStudents
+
+const viewAllRejectedStudents = async (req, res) => {
+  try {
+    const students = await studentSchema.find({ isActive: "rejected" });
+    res.status(200).json({
+      msg: "Account retrieved",
+      data: students,
+    });
+  } catch (error) {
+    res.status(404).json({
+      msg: "error",
+      error: error,
+    });
+  }
+};
+
+//updateStudentProfile
+
+const updateStudentProfile = async (req, res) => {
+  try {
+    const updateProfile = await studentSchema.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        addNo: req.body.addNo,
+        password: req.body.password,
+        photo: req.file,
+      }
+    );
+    res.status(200).json({
+      msg: "Profile updated",
+      data: updateProfile,
+    });
+  } catch (error) {
+    res.status(400).json({
+      msg: "error 400",
+      err: error,
+    });
+  }
+};
 module.exports = {
   addStudent,
   upload,
@@ -170,4 +244,8 @@ module.exports = {
   acceptStudent,
   viewAllStudents,
   viewStudentById,
+  viewAllApprovedStudents,
+  viewAllRejectedStudents,
+  updateStudentProfile,
+  viewAllPendingStudents
 };
