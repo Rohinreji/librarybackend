@@ -29,6 +29,11 @@ const BookSchema =new mongoose.Schema ({
     type:String,
     required:true
     
+  },
+  wishlistedUserId:{
+    type:[mongoose.Schema.Types.ObjectId],
+    ref:"books",
+    default:[]
   }
 })
 

@@ -16,23 +16,22 @@ const addRentBook = async (req, res) => {
 
 const tutorViewRental = async (req, res) => {
   try {
-    const approve = await rendedBooksSchema.find({ adminApprove: "approved" });
-    console.log(approve, "approved");
-    if (approve) {
-      const result = await rendedBooksSchema
-        
-        .populate("booksId");
-      console.log(result);
+    // const approve = await rendedBooksSchema.find({adminApprove:"approved"});
+    // console.log(approve,"approved");
+    // if (approve) {
+      const result = await rendedBooksSchema.find({adminApprove:"approved",tutorId:req.body.tutorId}).populate("booksId");
+      
+      console.log(result,"result");
 
       res.status(200).json({
         data: result,
         msg: "data retrieved",
       });
-    } else {
-      res.status(408).json({
-        msg: "no data found ",
-      });
-    }
+    // } else {
+    //   res.status(408).json({
+    //     msg: "no data found ",
+    //   });
+    // }
   } catch (error) {
     res.json({
       status: 400,
@@ -65,8 +64,7 @@ const adminApproveRental = async (req, res) => {
     console.log(date, "date");
     const result = await rendedBooksSchema.findByIdAndUpdate(
       { _id: req.params.id },
-      { adminApprove: "approved", approvedDate:date },
-   
+      { adminApprove: "approved", approvedDate: date }
     );
     console.log(result);
 
@@ -212,7 +210,7 @@ const approveReturnReq = async (req, res) => {
     );
 
     res.status(200).json({
-      data: null,
+      data: result,
       msg: "return request approved",
     });
   } catch (error) {

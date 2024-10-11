@@ -1,14 +1,21 @@
 const mongoose = require("mongoose")
 
-const tutorSchema = new mongoose.Schema({
+const tutorWishlistSchema = new mongoose.Schema({
     tutorId:{
     type:mongoose.Schema.Types.ObjectId,
     ref:"tutors",
     },
     booksId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"boooks"
+        ref:"books"
+    },
+    isActive:{
+        type:Boolean,
+        default:false
     }
-})
+},    
+{timestamps:true}
 
-module.exports = new mongoose.model("wishlist",tutorSchema)
+)
+
+module.exports = new mongoose.model("tutorWishlist",tutorWishlistSchema)

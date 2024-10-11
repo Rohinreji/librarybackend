@@ -4,7 +4,7 @@ const student = require("./student/studentController");
 const tutor = require("./tutor/tutorController");
 const books = require("./books/booksController");
 const rent = require("./rendedBooks/rendedBooksController");
-
+const rentBookByTutor = require("./rendedBooks/rendedBooksController")
 const tutorAddToCart = require("./TutorAddToCart/tutorAddToCartController");
 const tutorWishlist = require("./tutorWishlist/tutrWishlistController");
 
@@ -31,7 +31,8 @@ router.get("/rentCartProductsByTutor/:id", tutorAddToCart.rentCartProducts);
 // tutorWishlist
 
 router.post("/tutorwishlist", tutorWishlist.tutorWishlist);
-
+router.post("/tutorRemoveFromWishlist",tutorWishlist.removeFromWishlist)
+router.get("/viewAllWishlist/:id",tutorWishlist.viewAllWishlist)
 // admin && tutors
 
 router.put("/approveTutor/:id", tutor.ApproveTutorsById);
