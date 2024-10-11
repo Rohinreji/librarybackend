@@ -249,15 +249,17 @@ const rejectTutorsById = async (req, res) => {
     });
   }
 };
-const updateTutorProfile =async (req,res) =>
+const   updateTutorProfile =async (req,res) =>
   {
   try {
     const result = await tutorSchema.findByIdAndUpdate({_id:req.params.id},
       {
         firstName:req.body.firstName,
+        lastName:req.body.lastName,
         email:req.body.email,
         idNo:req.body.idNo,
         profile: req.file
+
       }
       )
       res.status(200).json({
