@@ -7,7 +7,7 @@ const addStdRentBook = async (req, res) => {
     let rentedBook = new studentRentBookSchema({
       studentId: req.body.studentId,
       booksId: req.body.booksId,
-      addQuantity: req.body.addQuantity,
+      addedQuantity: req.body.addedQuantity,
     });
     const result = await rentedBook.save();
     return res.status(200).json({
@@ -78,7 +78,8 @@ const studentViewApprovedRentals = async (req, res) => {
       const approveStdRental = await studentRentBookSchema.find({
         studentId: req.body.studentId,
         adminApprove: "approved",
-      });
+      })
+      .populate("booksId")
       console.log(approveStdRental);
 
       res.status(200).json({

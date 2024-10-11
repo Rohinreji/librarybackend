@@ -7,8 +7,8 @@ const rent = require("./rendedBooks/rendedBooksController");
 const rentBookByTutor = require("./rendedBooks/rendedBooksController");
 const tutorAddToCart = require("./TutorAddToCart/tutorAddToCartController");
 const rentBookByStudent = require("./studentRentBook/studentRentBookController");
-const studentAddToCart = require("./studentAddToCart/studentAddToCartController");
-
+const studentAddToCart1 = require("./studentAddToCart/studentAddToCartController");
+const studentWishlist = require("./student/studentWishlist/studentWishlistController");
 //student
 router.post("/studentSignup", student.upload, student.addStudent);
 router.post("/studentLogin", student.studentLogin);
@@ -51,7 +51,13 @@ router.get(
   "/viewRejectedStdRentals",
   rentBookByStudent.viewAllRejectedStdRentals
 );
-router.post("/studentAddToCart", studentAddToCart.studentAddToCart);
+router.post("/studentAddToCart", studentAddToCart1.studentAddToCart);
+router.post("/studentViewCart", studentAddToCart1.studentViewCart);
+router.post("/removeBookFromCart/:id", studentAddToCart1.removeBookFromCart);
+router.post("/addToWishlist", studentWishlist.addToWishlist);
+router.post("/removeFromWishlist", studentWishlist.removeFromWishlist);
+router.get("/studentViewAllWishlist",studentWishlist.studentViewAllWishlist)
+
 //admin && tutors
 router.put("/approveTutor/:id", tutor.ApproveTutorsById);
 router.put("/rejectTutor/:id", tutor.rejectTutorsById);
