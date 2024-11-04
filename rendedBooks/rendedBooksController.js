@@ -209,6 +209,8 @@ const approveReturnReq = async (req, res) => {
       { returnBook: "approve", adminApprove: "pending" }
     );
 
+    await rendedBooksSchema.findByIdAndDelete({_id: req.body.id})
+
     res.status(200).json({
       data: result,
       msg: "return request approved",

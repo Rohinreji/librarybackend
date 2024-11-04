@@ -11,6 +11,10 @@ const tutorAddToCartSchema = new mongoose.Schema({
     },
     addedQuantity :{
         type:Number
+    },
+    isActive:{
+        type:Boolean,
+        default:false
     }
 })
 module.exports = new mongoose.model("tutorCarts",tutorAddToCartSchema)
