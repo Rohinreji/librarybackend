@@ -25,9 +25,10 @@ const addStdRentBook = async (req, res) => {
 
 const approveStdRentalBooks = async (req, res) => {
   try {
+    var date = new Date();
     const rentedBook = await studentRentBookSchema.findByIdAndUpdate(
       { _id: req.params.id },
-      { adminApprove: "approved" }
+      { adminApprove: "approved", approved: date }
     );
     if (!rentedBook) {
       res.status(500).json({
@@ -75,11 +76,12 @@ const studentViewApprovedRentals = async (req, res) => {
     console.log(approve);
 
     if (approve) {
-      const approveStdRental = await studentRentBookSchema.find({
-        studentId: req.body.studentId,
-        adminApprove: "approved",
-      })
-      .populate("booksId")
+      const approveStdRental = await studentRentBookSchema
+        .find({
+          studentId: req.body.studentId,
+          adminApprove: "approved",
+        })
+        .populate("booksId");
       console.log(approveStdRental);
 
       res.status(200).json({
@@ -94,6 +96,24 @@ const studentViewApprovedRentals = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       msg: "error",
+      err: error,
+    });
+  }
+};
+
+const studentViewApprovedRentalSingle = async (req, res) => {
+  try {
+    const result = await studentRentBookSchema
+      .findOne({ _id: req.params.id })
+      .populate("booksId");
+
+    res.status(200).json({
+      data: result,
+      msg: "data retrieved",
+    });
+  } catch (error) {
+    res.json({
+      status: 400,
       err: error,
     });
   }
@@ -140,6 +160,23 @@ const viewAllRejectedStdRentals = async (req, res) => {
   }
 };
 
+const stdBookReturnReq = async (req, res) => {
+  try {
+    const returnReq = await studentRentBookSchema.findByIdAndUpdate(
+      { _id: req.params.req },
+      { returnBook: "pending" }
+    );
+    res.status(200).json({
+      data: returnReq,
+      msg: "Return request has been sended",
+    });
+  } catch (error) {
+    res.status(400).json({
+      err: error,
+      msg: "Api fail",
+    });
+  }
+};
 module.exports = {
   addStdRentBook,
   approveStdRentalBooks,
@@ -147,4 +184,6 @@ module.exports = {
   studentViewApprovedRentals,
   viewPendingRentals,
   viewAllRejectedStdRentals,
+  studentViewApprovedRentalSingle,
+  stdBookReturnReq
 };

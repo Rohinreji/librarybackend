@@ -1,16 +1,23 @@
 const studentWishlistSchema = require("./studentWishlistSchema");
+const booksSchema = require("../../books/booksSchema");
 
 const addToWishlist = async (req, res) => {
   try {
+    const { studentId, booksId } = req.body;
+    const wishlistBook = await booksSchema.findOne({ _id: booksId });
+    wishlistBook.wishlistedUserId.push(studentId);
+
     let wishlist = new studentWishlistSchema({
-      studentId: req.body.studentId,
-      booksId: req.body.booksId,
-      isWished: true,
+      studentId: studentId,
+      booksId: booksId,
     });
-    const result = await wishlist.save();
+    await wishlist.save();
+    await wishlistBook.save();
+    console.log("stdId0", studentId);
+
     res.status(200).json({
+      data: wishlist,
       msg: "Added to wishlist",
-      data: result,
     });
   } catch (error) {
     res.status(400).json({
@@ -23,15 +30,16 @@ const addToWishlist = async (req, res) => {
 const removeFromWishlist = async (req, res) => {
   try {
     const { studentId, booksId } = req.body;
-    const wishlistId = await studentWishlistSchema.findOne({
-      studentId,
-      booksId,
-    });
+    const wishlistId = await studentWishlistSchema.findOne({ booksId });
     console.log(wishlistId);
-
+    await booksSchema.findByIdAndUpdate(
+      {
+        _id: booksId,
+      },
+      { $pull: { wishlistedUserId: studentId } }
+    );
     const result = await studentWishlistSchema.findByIdAndDelete(
       { _id: wishlistId._id },
-      { isWished: false }
     );
     res.status(200).json({
       msg: "Removed from wishlist",
@@ -46,11 +54,9 @@ const removeFromWishlist = async (req, res) => {
 };
 const studentViewAllWishlist = async (req, res) => {
   try {
-    const wishlist = await studentWishlistSchema.find(
-      { studentId: req.body.studentId},
-      { isWished: true }
-    )
-    .populate("booksId")
+    const wishlist = await studentWishlistSchema
+      .find({ studentId: req.body.studentId }, { isWished: true })
+      .populate("booksId");
     res.status(200).json({
       msg: "Data retreievd",
       data: wishlist,
