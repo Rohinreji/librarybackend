@@ -23,6 +23,9 @@ const stdRentBookSchema = new mongoose.Schema(
       enum: ["pending", "approved", "onRent", "rejected"],
       default: "pending",
     },
+    approvedDate: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

@@ -19,14 +19,16 @@ const tutorViewRental = async (req, res) => {
     // const approve = await rendedBooksSchema.find({adminApprove:"approved"});
     // console.log(approve,"approved");
     // if (approve) {
-      const result = await rendedBooksSchema.find({adminApprove:"approved",tutorId:req.body.tutorId}).populate("booksId");
-      
-      console.log(result,"result");
+    const result = await rendedBooksSchema
+      .find({ adminApprove: "approved", tutorId: req.body.tutorId })
+      .populate("booksId");
 
-      res.status(200).json({
-        data: result,
-        msg: "data retrieved",
-      });
+    console.log(result, "result");
+
+    res.status(200).json({
+      data: result,
+      msg: "data retrieved",
+    });
     // } else {
     //   res.status(408).json({
     //     msg: "no data found ",
