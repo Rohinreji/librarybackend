@@ -6,13 +6,29 @@ const tutorCart = async (req, res) => {
     let cart = new tutorAddToCartSchema({
       tutorId: req.body.tutorId,
       booksId: req.body.booksId,
-      addedQuantity:req.body.addedQuantity
+      addedQuantity:req.body.addedQuantity,
+      isActive:true
     });
-    const result = await cart.save();
-    res.status(200).json({
-      data: result,
-      msg: "Book added to cart",
-    });
+  
+ const existingCart = await tutorAddToCartSchema.findOne({tutorId:req.body.tutorId,booksId:req.body.booksId})
+ if(existingCart)
+ {
+
+  res.status(505).json({
+    data:existingCart,
+    msg:"already added to cart"
+  })
+ }
+else
+{
+  const result = await cart.save();
+
+  res.status(200).json({
+    data: result,
+    msg: "Book added to cart",
+  });
+}
+
   } catch (error) {
     res.status(400).json({
       err: error,
