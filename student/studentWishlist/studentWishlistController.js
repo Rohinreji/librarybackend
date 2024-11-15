@@ -55,8 +55,10 @@ const removeFromWishlist = async (req, res) => {
 const studentViewAllWishlist = async (req, res) => {
   try {
     const wishlist = await studentWishlistSchema
-      .find({ studentId: req.body.studentId }, { isWished: true })
+      .find({ studentId: req.params.id })
       .populate("booksId");
+      console.log(wishlist);
+      
     res.status(200).json({
       msg: "Data retreievd",
       data: wishlist,
