@@ -7,9 +7,7 @@ const rent = require("./rendedBooks/rendedBooksController");
 const rentBookByTutor = require("./rendedBooks/rendedBooksController");
 const tutorAddToCart = require("./TutorAddToCart/tutorAddToCartController");
 const rentBookByStudent = require("./studentRentBook/studentRentBookController");
-const studentAddToCart = require("./studentAddToCart/studentAddToCartController");
 const tutorWishlist = require("./tutorWishlist/tutrWishlistController");
-
 const studentAddToCart1 = require("./studentAddToCart/studentAddToCartController");
 const studentWishlist = require("./student/studentWishlist/studentWishlistController");
 //student
@@ -48,6 +46,11 @@ router.post(
   "/studentViewApprovedRentals",
   rentBookByStudent.studentViewApprovedRentals
 );
+router.post(
+  "/adminViewStdApprovedRental",
+  rentBookByStudent.adminViewApprovedStdRentals
+);
+router.post("/adminViewReturnStdReq", rentBookByStudent.adminViewReturnStdReq);
 router.get("/viewAllPendingStdRentals", rentBookByStudent.viewPendingRentals);
 router.post("/rejectStdRental/:id", rentBookByStudent.rejectStdBookRental);
 router.get(
@@ -62,9 +65,13 @@ router.post(
 router.post("/studentAddToCart", studentAddToCart1.studentAddToCart);
 router.post("/studentViewCart", studentAddToCart1.studentViewCart);
 router.post("/removeBookFromCart/:id", studentAddToCart1.removeBookFromCart);
+router.post("/rentAllBookFromCart", studentAddToCart1.rentAllBookFromCart);
 router.post("/addToWishlist", studentWishlist.addToWishlist);
 router.post("/removeFromWishlist", studentWishlist.removeFromWishlist);
-router.get("/studentViewAllWishlist", studentWishlist.studentViewAllWishlist);
+router.get(
+  "/studentViewAllWishlist/:id",
+  studentWishlist.studentViewAllWishlist
+);
 
 //admin && tutors
 router.put("/approveTutor/:id", tutor.ApproveTutorsById);
@@ -80,12 +87,11 @@ router.post("/tutorRemoveFromCart/:id", tutorAddToCart.removeFromCart);
 router.get("/rentCartProductsByTutor/:id", tutorAddToCart.rentCartProducts);
 
 // tutorWishlist
-
 router.post("/tutorwishlist", tutorWishlist.tutorWishlist);
 router.post("/tutorRemoveFromWishlist", tutorWishlist.removeFromWishlist);
 router.get("/viewAllWishlist/:id", tutorWishlist.viewAllWishlist);
-// admin && tutors
 
+// admin && tutors
 router.put("/approveTutor/:id", tutor.ApproveTutorsById);
 router.put("/rejectTutor/:id", tutor.rejectTutorsById);
 router.get("/viewAllApprovedTutors", tutor.viewAllApprovedTutors);
@@ -108,7 +114,6 @@ router.post("/adminApproveReturnReq", rentBookByTutor.approveReturnReq);
 router.post("/adminRejectReturnReq", rentBookByTutor.rejectReturnReq);
 
 // books
-
 router.post("/add-books", books.upload, books.addBooks);
 router.get("/viewAllBooks", books.viewAllBook);
 router.get("/view-single-product/:id", books.tutorViewSingleProduct);

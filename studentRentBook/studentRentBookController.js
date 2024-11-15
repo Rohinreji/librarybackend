@@ -28,7 +28,7 @@ const approveStdRentalBooks = async (req, res) => {
     var date = new Date();
     const rentedBook = await studentRentBookSchema.findByIdAndUpdate(
       { _id: req.params.id },
-      { adminApprove: "approved", approved: date }
+      { adminApprove: "approved", approvedDate: date, returnBook: "onRent" }
     );
     if (!rentedBook) {
       res.status(500).json({
@@ -52,7 +52,7 @@ const rejectStdBookRental = async (req, res) => {
   try {
     const rejectBook = await studentRentBookSchema.findByIdAndUpdate(
       { _id: req.params.id },
-      { adminApprove: "rejected" }
+      { adminApprove: "rejected", returnBook: "rejected" }
     );
     res.status(200).json({
       msg: "Book rejected",
@@ -163,13 +163,61 @@ const viewAllRejectedStdRentals = async (req, res) => {
 const stdBookReturnReq = async (req, res) => {
   try {
     const returnReq = await studentRentBookSchema.findByIdAndUpdate(
-      { _id: req.params.req },
+      { _id: req.params.id },
       { returnBook: "pending" }
     );
     res.status(200).json({
       data: returnReq,
       msg: "Return request has been sended",
     });
+  } catch (error) {
+    res.status(400).json({
+      err: error,
+      msg: "Api fail",
+    });
+  }
+};
+
+const adminViewApprovedStdRentals = async (req, res) => {
+  try {
+    const result = await studentRentBookSchema
+      .find({ adminApprove: "approved" })
+      .populate("booksId")
+      .populate("studentId");
+    res.status(200).json({
+      data: result,
+      msg: "data retrieved",
+    });
+  } catch (error) {
+    res.status(400).json({
+      err: err,
+      msg: "Api fail",
+    });
+  }
+};
+
+const adminViewReturnStdReq = async (req, res) => {
+  try {
+    const approvedBook = await studentRentBookSchema.find({
+      adminApprove: "approved",
+    });
+    console.log("approvedBooks", approvedBook);
+
+    if (approvedBook) {
+      const result = await studentRentBookSchema
+        .find({ returnBook: "pending" })
+        .populate("booksId")
+        .populate("studentId");
+      console.log("res", result);
+      res.status(200).json({
+        data: result,
+        msg: "Data retrieved",
+      });
+    } else {
+      res.status(402).json({
+        msg: "no data found",
+      });
+    }
   } catch (error) {
     res.status(400).json({
       err: error,
@@ -185,5 +233,7 @@ module.exports = {
   viewPendingRentals,
   viewAllRejectedStdRentals,
   studentViewApprovedRentalSingle,
-  stdBookReturnReq
+  stdBookReturnReq,
+  adminViewApprovedStdRentals,
+  adminViewReturnStdReq,
 };

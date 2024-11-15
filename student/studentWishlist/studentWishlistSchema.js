@@ -8,10 +8,6 @@ const studentWishlistSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "books",
   },
-  isWished: {
-    type: Boolean,
-    default: false,
-  },
 });
 
 module.exports = new mongoose.model("stdWishlist", studentWishlistSchema);
