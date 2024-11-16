@@ -72,7 +72,15 @@ router.get(
   "/studentViewAllWishlist/:id",
   studentWishlist.studentViewAllWishlist
 );
-
+router.post(
+  "/rejectStdBookReturnReq",
+  rentBookByStudent.rejectStdBookReturnReq
+);
+//admin && return
+router.post(
+  "/approveStdBookReturnReq",
+  rentBookByStudent.approveStdBookReturnReq
+);
 //admin && tutors
 router.put("/approveTutor/:id", tutor.ApproveTutorsById);
 router.put("/rejectTutor/:id", tutor.rejectTutorsById);
