@@ -115,42 +115,40 @@ const removeQuantity = async (req, res) => {
   }
 };
 
-const addBookQuantity = async (req,res) => {
+const addBookQuantity = async (req, res) => {
   try {
-    const book = await booksSchema.findById({_id:req.params.id});
-
-    const newQuantity =( await book.availableCopies) + req.body.quantity;
+    const book = await booksSchema.findById({ _id: req.params.id });
+    const newQuantity = (await book.availableCopies) + req.body.quantity;
     const result = await booksSchema.findByIdAndUpdate(
-      { _id:req.params.id},
+      { _id: req.params.id },
       { availableCopies: newQuantity }
     );
     res.status(200).json({
-      data:result,
-      msg:"quanity updated"
-    })
+      data: result,
+      msg: "quanity updated",
+    });
   } catch (error) {
     res.status(400).json({
-      err:error,
-      msg:"error"
-    })
+      err: error,
+      msg: "error on",
+    });
   }
 };
 
-const filterByCategory = async (req,res) =>
-  {
-try {
-  const result = await booksSchema.find({category:req.params.cat})
-res.status(200).json({
-  data:result,
-  msg:"success"
-})
-} catch (error) {
-  res.status(400).json({
-    err:error,
-    msg:"error"
-  })
-}
-  } 
+const filterByCategory = async (req, res) => {
+  try {
+    const result = await booksSchema.find({ category: req.params.cat });
+    res.status(200).json({
+      data: result,
+      msg: "success",
+    });
+  } catch (error) {
+    res.status(400).json({
+      err: error,
+      msg: "error",
+    });
+  }
+};
 
 module.exports = {
   addBooks,
@@ -159,5 +157,5 @@ module.exports = {
   tutorViewSingleProduct,
   removeQuantity,
   addBookQuantity,
-  filterByCategory
+  filterByCategory,
 };

@@ -28,7 +28,7 @@ const approveStdRentalBooks = async (req, res) => {
     var date = new Date();
     const rentedBook = await studentRentBookSchema.findByIdAndUpdate(
       { _id: req.params.id },
-      { adminApprove: "approved", approved: date }
+      { adminApprove: "approved", approvedDate: date, returnBook: "onRent" }
     );
     if (!rentedBook) {
       res.status(500).json({
@@ -52,7 +52,7 @@ const rejectStdBookRental = async (req, res) => {
   try {
     const rejectBook = await studentRentBookSchema.findByIdAndUpdate(
       { _id: req.params.id },
-      { adminApprove: "rejected" }
+      { adminApprove: "rejected", returnBook: "rejected" }
     );
     res.status(200).json({
       msg: "Book rejected",
@@ -163,7 +163,7 @@ const viewAllRejectedStdRentals = async (req, res) => {
 const stdBookReturnReq = async (req, res) => {
   try {
     const returnReq = await studentRentBookSchema.findByIdAndUpdate(
-      { _id: req.params.req },
+      { _id: req.params.id },
       { returnBook: "pending" }
     );
     res.status(200).json({
@@ -177,6 +177,89 @@ const stdBookReturnReq = async (req, res) => {
     });
   }
 };
+
+const adminViewApprovedStdRentals = async (req, res) => {
+  try {
+    const result = await studentRentBookSchema
+      .find({ adminApprove: "approved" })
+      .populate("booksId")
+      .populate("studentId");
+    res.status(200).json({
+      data: result,
+      msg: "data retrieved",
+    });
+  } catch (error) {
+    res.status(400).json({
+      err: err,
+      msg: "Api fail",
+    });
+  }
+};
+
+const adminViewReturnStdReq = async (req, res) => {
+  try {
+    const result = await studentRentBookSchema
+      .find({ adminApprove: "approved", returnBook: "pending" })
+      .populate("booksId")
+      .populate("studentId");
+    if (result.length > 0) {
+      res.status(200).json({
+        data: result,
+        msg: "Data retrieved successfully",
+      });
+    } else {
+      res.status(404).json({
+        msg: "No pending returns found",
+      });
+    }
+  } catch (error) {
+    console.error("Error:", error.message);
+    res.status(500).json({
+      err: error.message,
+      msg: "API failed",
+    });
+  }
+};
+
+const approveStdBookReturnReq = async (req, res) => {
+  try {
+    const result = await studentRentBookSchema.findByIdAndUpdate(
+      { _id: req.body.id },
+      { returnBook: "approved" }
+    );
+    await studentRentBookSchema.findByIdAndDelete({ _id: req.body.id });
+    res.status(200).json({
+      msg: "Request Accepted",
+      data: result,
+    });
+  } catch (error) {
+    res.status(404).json({
+      msg: "api failed",
+      err: error,
+    });
+  }
+};
+
+const rejectStdBookReturnReq = async (req, res) => {
+  try {
+    const result = await studentRentBookSchema.findByIdAndUpdate(
+      {
+        _id: req.body.id,
+      },
+      { returnBook: "rejected" }
+    );
+    res.status(200).json({
+      data:result,
+      msg:"Request reject"
+    })
+  } catch (error) {
+    res.status(404).json({
+      msg:"api fail",
+      err:error
+    })
+  }
+};
+
 module.exports = {
   addStdRentBook,
   approveStdRentalBooks,
@@ -185,5 +268,9 @@ module.exports = {
   viewPendingRentals,
   viewAllRejectedStdRentals,
   studentViewApprovedRentalSingle,
-  stdBookReturnReq
+  stdBookReturnReq,
+  adminViewApprovedStdRentals,
+  adminViewReturnStdReq,
+  approveStdBookReturnReq,
+  rejectStdBookReturnReq
 };
