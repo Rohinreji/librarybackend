@@ -198,33 +198,68 @@ const adminViewApprovedStdRentals = async (req, res) => {
 
 const adminViewReturnStdReq = async (req, res) => {
   try {
-    const approvedBook = await studentRentBookSchema.find({
-      adminApprove: "approved",
-    });
-    console.log("approvedBooks", approvedBook);
-
-    if (approvedBook) {
-      const result = await studentRentBookSchema
-        .find({ returnBook: "pending" })
-        .populate("booksId")
-        .populate("studentId");
-      console.log("res", result);
+    const result = await studentRentBookSchema
+      .find({ adminApprove: "approved", returnBook: "pending" })
+      .populate("booksId")
+      .populate("studentId");
+    if (result.length > 0) {
       res.status(200).json({
         data: result,
-        msg: "Data retrieved",
+        msg: "Data retrieved successfully",
       });
     } else {
-      res.status(402).json({
-        msg: "no data found",
+      res.status(404).json({
+        msg: "No pending returns found",
       });
     }
   } catch (error) {
-    res.status(400).json({
-      err: error,
-      msg: "Api fail",
+    console.error("Error:", error.message);
+    res.status(500).json({
+      err: error.message,
+      msg: "API failed",
     });
   }
 };
+
+const approveStdBookReturnReq = async (req, res) => {
+  try {
+    const result = await studentRentBookSchema.findByIdAndUpdate(
+      { _id: req.body.id },
+      { returnBook: "approved" }
+    );
+    await studentRentBookSchema.findByIdAndDelete({ _id: req.body.id });
+    res.status(200).json({
+      msg: "Request Accepted",
+      data: result,
+    });
+  } catch (error) {
+    res.status(404).json({
+      msg: "api failed",
+      err: error,
+    });
+  }
+};
+
+const rejectStdBookReturnReq = async (req, res) => {
+  try {
+    const result = await studentRentBookSchema.findByIdAndUpdate(
+      {
+        _id: req.body.id,
+      },
+      { returnBook: "rejected" }
+    );
+    res.status(200).json({
+      data:result,
+      msg:"Request reject"
+    })
+  } catch (error) {
+    res.status(404).json({
+      msg:"api fail",
+      err:error
+    })
+  }
+};
+
 module.exports = {
   addStdRentBook,
   approveStdRentalBooks,
@@ -236,4 +271,6 @@ module.exports = {
   stdBookReturnReq,
   adminViewApprovedStdRentals,
   adminViewReturnStdReq,
+  approveStdBookReturnReq,
+  rejectStdBookReturnReq
 };
