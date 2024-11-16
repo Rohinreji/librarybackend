@@ -9,7 +9,7 @@ const tutorAddToCart = require("./TutorAddToCart/tutorAddToCartController");
 const rentBookByStudent = require("./studentRentBook/studentRentBookController");
 const studentAddToCart = require("./studentAddToCart/studentAddToCartController");
 const tutorWishlist = require("./tutorWishlist/tutrWishlistController");
-
+const helpDesk = require("./helpDesk/helpDeskController")
 const studentAddToCart1 = require("./studentAddToCart/studentAddToCartController");
 const studentWishlist = require("./student/studentWishlist/studentWishlistController");
 //student
@@ -124,5 +124,11 @@ router.get(
   rentBookByTutor.tutorViewRentalInReturn
 );
 router.post("/rentBooks", rent.addRentBook);
+
+
+// helpdesk or chat
+
+router.post("/sendMessage", helpDesk.addMessage)
+router.post("/getMessage/:id" ,helpDesk.getMessage)
 
 module.exports = router;
