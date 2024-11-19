@@ -150,6 +150,66 @@ const filterByCategory = async (req, res) => {
   }
 };
 
+
+const UpdateBookDetails = async(req,res) =>
+{
+  try {
+    const {
+      bookTitle,
+      author,
+      yearOfPublication,
+      language,
+      availableCopies,
+      category,
+      status,
+    } = req.body;
+    const result = await booksSchema.findByIdAndUpdate({_id:req.params.id},
+      {
+        bookTitle,
+        author,
+        yearOfPublication,
+        language,
+        availableCopies,
+        category,
+        status,
+        bookImage: req.file, 
+      }
+    )
+  console.log(result);
+  
+  res.status(200).json({
+    data:result,
+    msg:"book details updated successfully"
+  })
+  } catch (error) {
+    res.status(400).json({
+      err:error,
+      msg:"error"
+    })
+  }
+
+}
+
+
+const deleteBook = async (req,res) =>
+{
+  try {
+    const result = await booksSchema.findByIdAndDelete(
+      {_id:req.params.id}
+    )
+    res.status(200).json({
+      data:result,
+      msg:"book is deleted"
+    })
+
+  } catch (error) {
+    res.status(400).json({
+      error:"error",
+      msg:"error"
+    })
+  }
+}
+
 module.exports = {
   addBooks,
   upload,
@@ -158,4 +218,6 @@ module.exports = {
   removeQuantity,
   addBookQuantity,
   filterByCategory,
+  UpdateBookDetails,
+  deleteBook
 };

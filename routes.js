@@ -33,7 +33,7 @@ router.post("/tutorSignup", tutor.upload, tutor.addTutor);
 router.post("/tutorLogin", tutor.tutoLogin);
 router.get("/tutorViewProfile/:id", tutor.viewProfile);
 router.post("/tutor-forgot-password", tutor.TutorForgetPassword);
-router.post("/updateTutorProfile/:id", tutor.updateTutorProfile);
+router.post("/updateTutorProfile/:id",tutor.upload, tutor.updateTutorProfile);
 router.get("/view-all/tutor", tutor.viewAllTutors);
 router.post("/tutorAddToCart", tutorAddToCart.tutorCart);
 router.post("/tutorViewAddToCart", tutorAddToCart.viewTutorCart);
@@ -129,7 +129,8 @@ router.get("/view-single-product/:id", books.tutorViewSingleProduct);
 router.post("/removeBookQuantity/:id", books.removeQuantity);
 router.post("/addBookQuantity/:id", books.addBookQuantity);
 router.get("/filterBookByCategory/:cat", books.filterByCategory);
-
+router.post("/edit-bookDetails/:id",books.upload,books.UpdateBookDetails)
+router.post("/admin-deleteBook/:id" ,books.deleteBook )
 // rent
 router.post("/rendBookByTutor", rentBookByTutor.addRentBook);
 router.post("/tutorViewRental", rentBookByTutor.tutorViewRental);

@@ -13,6 +13,8 @@ app.use(express.static(`${__dirname}/upload`))
 const routes = require("./routes");
 app.use("/", routes);
 
-app.listen(3005, () => {
+app.listen(3005,'0.0.0.0',() => {
   console.log("server is running successfull");
+  console.log(`Server running at http://0.0.0.0:${3005}`);
+
 });
