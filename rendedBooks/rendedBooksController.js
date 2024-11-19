@@ -1,3 +1,4 @@
+const booksSchema = require("../books/booksSchema");
 const rendedBooksSchema = require("./rendedBooksSchema");
 const addRentBook = async (req, res) => {
   try {
@@ -93,12 +94,18 @@ const adminRejectRental = async (req, res) => {
       { _id: req.params.id },
       { adminApprove: "rejected" }
     );
+    await rendedBooksSchema.findByIdAndDelete(
+      { _id: req.params.id }
+    )
+   
+
     console.log(result);
     if (!result) {
       res.status(500).json({
         msg: "No request was sended",
       });
     } else {
+      
       res.status(200).json({
         data: result,
         msg: "request rejected",
