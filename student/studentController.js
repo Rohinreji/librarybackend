@@ -26,6 +26,10 @@ const addStudent = async (req, res) => {
     if (existingUser) {
       return res.status(409).json({ msg: "Email is already exist" });
     }
+    const existingUser1 = await studentSchema.findOne({ addNo });
+    if (existingUser1) {
+      return res.status(408).json({ msg: "Admission no is already exist" });
+    }
     const result = await student.save();
     return res.json({
       status: 200,
