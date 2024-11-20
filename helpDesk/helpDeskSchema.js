@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const helpDeskSchema = (
+const helpDeskSchema = new mongoose.Schema(
     {
         message:{
             type:String,
@@ -12,7 +12,12 @@ const helpDeskSchema = (
         value:{
             type:String,
         }
+
+    },
+    
+    {
+        timestamps: true,
     }
-) 
+) ;
 module.exports = new mongoose.model("helpDesk",helpDeskSchema)
 
