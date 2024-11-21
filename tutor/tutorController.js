@@ -28,8 +28,8 @@ const addTutor = async (req, res) => {
     if (existingUser) {
       return res.status(409).json({ msg: "email ias already exist" });
     }
+    
     const existingUser1 = await tutorSchema.findOne({ idNo });
-
     if (existingUser1) {
       return res.status(408).json({ msg: "idNo is already exist" });
     }
@@ -249,7 +249,7 @@ const rejectTutorsById = async (req, res) => {
     });
   }
 };
-const   updateTutorProfile =async (req,res) =>
+const updateTutorProfile =async (req,res) =>
   {
   try {
     const result = await tutorSchema.findByIdAndUpdate({_id:req.params.id},
